@@ -51,7 +51,7 @@ export default function Step2() {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", maxWidth: "600px", mx: "auto", flexDirection: "column" }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", maxWidth: "550px", mx: "auto", flexDirection: "column" }}>
       <Navbar step="step2" />
 
       <Box

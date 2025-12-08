@@ -11,15 +11,18 @@ import { useNavigate } from "react-router-dom";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SchoolIcon from "@mui/icons-material/School";
 
+import Modal from "@mui/material/Modal";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+
 export default function Step1() {
   const [status, setStatus] = useState("");
   const navigate = useNavigate();
-  const [error, setError] = useState("");
 
+  const [openModal, setOpenModal] = useState(false);
+  const [capacityMessage, setCapacityMessage] = useState("");
 
   const goNext = async () => {
-    setError(""); 
-
     const url =
       status === "graduate"
         ? "http://panel.makeenacademy.ir/api/capacity/check/graduate"
@@ -30,19 +33,20 @@ export default function Step1() {
       const data = await res.json();
 
       if (data.status === "full") {
-        setError(data.message); 
+        setCapacityMessage(
+          `ظرفیت ${status === "student" ? "دانشجو" : "فارغ‌التحصیل"} ها تکمیل شده است. لطفا با آکادمی مکین تماس بگیرید.`
+        );
+        setOpenModal(true);
         return;
       }
 
-      
       localStorage.setItem("signup-step1", JSON.stringify({ status }));
       navigate("/create/step2");
-
     } catch (err) {
-      setError("خطایی رخ داد. دوباره تلاش کنید.");
+      setCapacityMessage("خطایی رخ داد. لطفا دوباره تلاش کنید.");
+      setOpenModal(true);
     }
   };
-
 
   function LabelWithIcons({ label, isStudent }) {
     return (
@@ -54,7 +58,7 @@ export default function Step1() {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", maxWidth: "600px", mx: "auto", flexDirection: "column" }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", maxWidth: "550px", mx: "auto", flexDirection: "column" }}>
       <Navbar step="step1" />
 
       <Box sx={{ flexGrow: 1, mt: 3, display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -62,7 +66,7 @@ export default function Step1() {
           name="status"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%", mr: "20px", }}
+          sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%", mr: "20px" }}
         >
           <FormControlLabel
             value="graduate"
@@ -73,7 +77,7 @@ export default function Step1() {
                 sx={{
                   color: "#01144f",
                   "&.Mui-checked": {
-                    color: "#01144f",
+                    color: "#01144f"
                   }
                 }}
               />
@@ -98,7 +102,7 @@ export default function Step1() {
                 sx={{
                   color: "#01144f",
                   "&.Mui-checked": {
-                    color: "#01144f",
+                    color: "#01144f"
                   }
                 }}
               />
@@ -114,19 +118,6 @@ export default function Step1() {
             }}
           />
         </RadioGroup>
-        {error && (
-          <Box
-            sx={{
-              color: "red",
-              fontFamily: "regular",
-              mt: 2,
-              textAlign: "center"
-            }}
-          >
-            {error}
-          </Box>
-        )}
-
 
         <Box sx={{ mt: "auto", pb: 3, width: "100%", display: "flex", justifyContent: "center" }}>
           <Button
@@ -138,13 +129,40 @@ export default function Step1() {
               height: "55px",
               fontFamily: "medium",
               backgroundColor: status ? "#01144f" : "#c2c2c2",
-              fontSize: "20px",
+              fontSize: "20px"
             }}
           >
             ادامه
           </Button>
         </Box>
       </Box>
+
+      {/* ------- Modal ------- */}
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <Paper
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            p: 3,
+            width: "80%",
+            maxWidth: "400px",
+            textAlign: "center",
+            borderRadius: 2
+          }}
+        >
+          <Typography sx={{ fontFamily: "regular", mb: 2 }}>{capacityMessage}</Typography>
+
+          <Button
+            variant="contained"
+            onClick={() => setOpenModal(false)}
+            sx={{ fontFamily: "medium", backgroundColor: "#01144f" }}
+          >
+            متوجه شدم
+          </Button>
+        </Paper>
+      </Modal>
     </Box>
   );
 }

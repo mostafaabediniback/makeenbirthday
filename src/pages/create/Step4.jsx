@@ -135,7 +135,7 @@ useEffect(() => {
   if (!data) return null;
 
   return (
-    <Box sx={{ minHeight: "100vh", maxWidth: "600px", mx: "auto", display: "flex", flexDirection: "column" }}>
+    <Box sx={{ minHeight: "100vh", maxWidth: "550px", mx: "auto", display: "flex", flexDirection: "column" }}>
       <Navbar step="step4" />
 
       <Typography sx={{ mt: 3, textAlign: "center", fontFamily: "regular", fontSize: "20px" }}>

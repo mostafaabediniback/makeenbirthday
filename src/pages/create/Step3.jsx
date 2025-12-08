@@ -71,7 +71,7 @@ const handleNext = () => {
     <Box
       sx={{
         height: "100vh",
-        maxWidth: "600px",
+        maxWidth: "550px",
         mx: "auto",
         display: "flex",
         flexDirection: "column",
