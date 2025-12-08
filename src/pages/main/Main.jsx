@@ -43,7 +43,7 @@ export default function Home() {
 
           {/* بادکنک سمت راست */}
           <img
-            src="/images/balloon.png"
+            src="/images/baloon.svg"
             alt="balloon"
             className="relative  right-28  float-animation lg:relative lg:right-[130px] lg:h-full "
           />
