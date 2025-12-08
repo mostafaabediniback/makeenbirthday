@@ -5,24 +5,7 @@ export default function Home() {
   const navigate = useNavigate();
   const [openModal, setOpenModal] = useState(false);
 
-  const checkCapacity = async () => {
-    try {
-      const res = await fetch("http://panel.makeenacademy.ir/api/capacity/check/student");
-      const data = await res.json();
 
-      if (data.status) {
-        if (data.status) {
-  localStorage.removeItem("retrieve-data");  
-  navigate("/create/step1");
-}
-
-        navigate("/create/step1");  }
-      
-    } catch (error) {
-      console.error(error);
-      setOpenModal(true);
-    }
-  };
 
   return (
     <>
@@ -107,32 +90,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* مودال ظرفیت تکمیل */}
-      {openModal && (
-        <div
-          className="fixed inset-0  flex items-center justify-center z-999"
-          onClick={() => setOpenModal(false)}
-        >
-          <div
-            className="bg-white rounded-xl p-6 w-80 text-center shadow-lg"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <p className="text-lg font-[kalamehregular] mb-4">
-              ظرفیت تکمیل شده است
-            </p>
-            <p className="text-sm text-gray-600 font-[kalamehregular]">
-              لطفاً با آکادمی مکین تماس بگیرید.
-            </p>
 
-            <button
-              className="w-full bg-blue-700 text-white py-2 mt-5 rounded-lg font-[kalamehregular]"
-              onClick={() => setOpenModal(false)}
-            >
-              فهمیدم
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }
