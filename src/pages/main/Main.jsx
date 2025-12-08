@@ -45,7 +45,7 @@ export default function Home() {
           <img
             src="/images/balloon.png"
             alt="balloon"
-            className="absolute right-28  h-[65%] float-animation lg:relative lg:right-[130px] lg:h-full "
+            className="relative  right-28  float-animation lg:relative lg:right-[130px] lg:h-full "
           />
 
           {/* متن سمت چپ */}
@@ -53,13 +53,13 @@ export default function Home() {
 
             <div>
 
-            <p className="text-right text-3xl font-[kalamehmedium] leading-tight">
+            <p className="text-right text-2xl font-[kalamehmedium] leading-tight lg:text-3xl">
               جشن تولد ۱۴ سالگی
             </p>
 
             <div className="flex items-center gap-2 mt-2">
               <img src="/images/makeenlogo.png" width={28} height={28} alt="logo" />
-              <p className="text-2xl font-bold font-[kalamehmedium] lg:text-4xl">آکادمی مکین</p>
+              <p className="text-3xl font-bold font-[kalamehmedium] lg:text-4xl">آکادمی مکین</p>
             </div>
 
 
@@ -69,17 +69,17 @@ export default function Home() {
 
               <div className="flex items-center gap-2">
                 <img src="/icons/calendar.svg" width={16} height={16} alt="calendar" />
-                <p className="lg:font-[kalamehregular]">جمعه ۲۸ آذر ۱۴۰۴</p>
+                <p className="font-[kalamehregular] lg:text-lg">جمعه ۲۸ آذر ۱۴۰۴</p>
               </div>
 
               <div className="flex items-center gap-2">
                 <img src="/icons/clock.svg" width={16} height={16} alt="clock" />
-                <p className="lg:font-[kalamehregular]">ساعت ۱۵</p>
+                <p className="font-[kalamehregular] lg:text-lg">ساعت ۱۵</p>
               </div>
 
               <div className="flex items-center gap-2">
                 <img src="/icons/location.svg" width={16} height={16} alt="location" />
-                <p className="lg:font-[kalamehregular]">سالن همایش مرکز نوآوری شریف</p>
+                <p className="font-[kalamehregular] lg:text-lg">سالن همایش مرکز نوآوری شریف</p>
               </div>
 
             </div>
