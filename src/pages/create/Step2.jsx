@@ -51,31 +51,32 @@ export default function Step2() {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", maxWidth: "500px", mx: "auto", flexDirection: "column" }}>
+    <Box
+      sx={{
+        height: "100vh",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        maxWidth: "500px",
+        mx: "auto"
+      }}
+    >
       <Navbar step="step2" />
 
+      {/* محتوا */}
       <Box
         sx={{
           flexGrow: 1,
-          mt: 3,
+          mt: 2,
           display: "flex",
           flexDirection: "column",
           gap: 3,
           px: 2,
+          overflow: "hidden"
         }}
       >
         {/* رشته */}
-        <FormControl fullWidth sx={{
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": {
-              borderColor: "primary",   
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#01144f !important",       
-              borderWidth: "1px",
-            }
-          }
-        }} >
+        <FormControl fullWidth>
           <InputLabel
             shrink={false}
             sx={{
@@ -91,23 +92,17 @@ export default function Step2() {
           </InputLabel>
 
           <Select value={major} onChange={(e) => setMajor(e.target.value)} sx={{ ...rtlSelectStyle, fontFamily: "regular" }}>
-            <MenuItem sx={{ fontFamily: "regular" }} value="programmer">برنامه نویس</MenuItem>
-            <MenuItem sx={{ fontFamily: "regular" }} value="uiux">طراح UI/UX </MenuItem>
+            <MenuItem value="programmer" sx={{ fontFamily: "regular" }}>
+              برنامه نویس
+            </MenuItem>
+            <MenuItem value="uiux" sx={{ fontFamily: "regular" }}>
+              طراح UI/UX
+            </MenuItem>
           </Select>
         </FormControl>
 
         {/* بوتکمپ */}
-        <FormControl fullWidth sx={{
-          "& .MuiOutlinedInput-root": {
-            "& fieldset": {
-              borderColor: "primary",   
-            },
-            "&.Mui-focused fieldset": {
-              borderColor: "#01144f !important",      
-              borderWidth: "1px",
-            }
-          }
-        }}>
+        <FormControl fullWidth>
           <span
             style={{
               position: "absolute",
@@ -123,64 +118,52 @@ export default function Step2() {
           </span>
 
           <Select value={bootcamp} onChange={(e) => setBootcamp(e.target.value)} sx={{ ...rtlSelectStyle, fontFamily: "regular" }}>
-            {(status === "student" ?
-              [
-                { value: "20", label: "بیستم (20)" },
-                { value: "21", label: "بیست و یکم (21)" },
-                { value: "22", label: "بیست و دوم (22)" }
-              ] :
-
-              [
-                { value: "19", label: "نوزدهم (19)" },
-                { value: "18", label: "هجدهم (18)" },
-                { value: "17", label: "هفدهم (17)" },
-                { value: "16", label: "شانزدهم (16)" },
-                { value: "15", label: "پانزدهم (15)" },
-                { value: "14", label: "چهاردهم (14)" },
-                { value: "13", label: "سیزدهم (13)" },
-                { value: "12", label: "دوازدهم (12)" },
-                { value: "11", label: "یازدهم (11)" },
-                { value: "10", label: "دهم(10)" },
-                { value: "9", label: "نهم (9)" },
-                { value: "8", label: "هشتم (8)" },
-                { value: "7", label: "هفتم(7)" },
-                { value: "6", label: "ششم (6)" },
-                { value: "5", label: "پنجم (5)" },
-                { value: "4", label: "چهارم (4)" },
-
-
-              ]
-
-
-
+            {(status === "student"
+              ? [
+                  { value: "20", label: "بیستم (20)" },
+                  { value: "21", label: "بیست و یکم (21)" },
+                  { value: "22", label: "بیست و دوم (22)" }
+                ]
+              : [
+                  { value: "19", label: "نوزدهم (19)" },
+                  { value: "18", label: "هجدهم (18)" },
+                  { value: "17", label: "هفدهم (17)" },
+                  { value: "16", label: "شانزدهم (16)" },
+                  { value: "15", label: "پانزدهم (15)" },
+                  { value: "14", label: "چهاردهم (14)" },
+                  { value: "13", label: "سیزدهم (13)" },
+                  { value: "12", label: "دوازدهم (12)" },
+                  { value: "11", label: "یازدهم (11)" },
+                  { value: "10", label: "دهم (10)" },
+                  { value: "9", label: "نهم (9)" },
+                  { value: "8", label: "هشتم (8)" },
+                  { value: "7", label: "هفتم (7)" },
+                  { value: "6", label: "ششم (6)" },
+                  { value: "5", label: "پنجم (5)" },
+                  { value: "4", label: "چهارم (4)" }
+                ]
             ).map((b) => (
-              <MenuItem sx={{ fontFamily: "regular" }} key={b.value} value={b.value}>{b.label}</MenuItem>
+              <MenuItem key={b.value} value={b.value} sx={{ fontFamily: "regular" }}>
+                {b.label}
+              </MenuItem>
             ))}
           </Select>
         </FormControl>
 
         {/* زبان */}
         {major === "programmer" && (
-          <FormControl fullWidth sx={{
-            "& .MuiOutlinedInput-root": {
-              "& fieldset": {
-                borderColor: "primary",  
-              },
-              "&.Mui-focused fieldset": {
-                borderColor: "#01144f !important",       
-                borderWidth: "1px",
-              }
-            }
-          }}>
-            <InputLabel shrink={false} sx={{
-              opacity: language ? 0 : 1, pointerEvents: "none", position: "absolute",
-              right: "30px",
-
-              fontFamily: "regular",
-
-              pointerEvents: "none",
-              color: "grey"
-            }}>
+          <FormControl fullWidth>
+            <InputLabel
+              shrink={false}
+              sx={{
+                opacity: language ? 0 : 1,
+                pointerEvents: "none",
+                position: "absolute",
+                right: "30px",
+                fontFamily: "regular",
+                color: "grey"
+              }}
+            >
               زبان برنامه‌نویسی
             </InputLabel>
 
@@ -199,9 +182,7 @@ export default function Step2() {
               }}
             >
               {langs.map((l) => (
-                <MenuItem sx={{
-                  fontFamily: "regular"
-                }} key={l.value} value={l.value}>
+                <MenuItem key={l.value} value={l.value} sx={{ fontFamily: "regular" }}>
                   <img src={l.icon} width={22} />
                   <ListItemText>{l.label}</ListItemText>
                 </MenuItem>
@@ -209,23 +190,29 @@ export default function Step2() {
             </Select>
           </FormControl>
         )}
+      </Box>
 
-        <Box sx={{mt:"95%", pb: 3 }}>
-          <Button
-            variant="contained"
-            disabled={!major || !bootcamp || (major === "programmer" && !language)}
-            onClick={handleGoNext}
-            sx={{
-              mx: "auto", display: "block", width: "100%",
-               fontSize:"20px"    ,
-              height: "55px",
-              fontFamily: "medium",
-              backgroundColor: major && bootcamp ? "#01144f" : "#c2c2c2",
-            }}
-          >
-            ادامه
-          </Button>
-        </Box>
+      {/* دکمه ثابت پایین */}
+      <Box
+        sx={{
+          p: 2,
+          width: "100%"
+        }}
+      >
+        <Button
+          variant="contained"
+          disabled={!major || !bootcamp || (major === "programmer" && !language)}
+          onClick={handleGoNext}
+          sx={{
+            width: "100%",
+            height: "55px",
+            fontSize: "20px",
+            fontFamily: "medium",
+            backgroundColor: major && bootcamp ? "#01144f" : "#c2c2c2",
+          }}
+        >
+          ادامه
+        </Button>
       </Box>
     </Box>
   );

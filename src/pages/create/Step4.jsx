@@ -6,7 +6,8 @@ import {
   Box,
   Button,
   Typography,
-  Modal
+  Modal,
+  Paper
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
@@ -18,78 +19,72 @@ export default function Step4() {
   const [openModal, setOpenModal] = useState(false);
   const [modalText, setModalText] = useState("");
 
-  
+  useEffect(() => {
+    const retrieveRaw = localStorage.getItem("retrieve-data");
 
-useEffect(() => {
-  const retrieveRaw = localStorage.getItem("retrieve-data");
+    if (retrieveRaw) {
+      const guest = JSON.parse(retrieveRaw);
 
-  if (retrieveRaw) {
-    const guest = JSON.parse(retrieveRaw);
+      let finalImage = null;
 
-    let finalImage = null;
+      if (guest.media?.length) {
+        let url = guest.media[0].original_url;
 
-    if (guest.media?.length) {
-      let url = guest.media[0].original_url;
+        url = url
+          .replace("https//", "https://")
+          .replace("http//", "http://")
+          .replace("http://https://", "https://")
+          .replace("https://http://", "http://");
 
-      console.log("RAW URL FROM API:", url);
+        url = url.replace(
+          "panel.makeenacademy.irhttps://panel.makeenacademy.ir",
+          "panel.makeenacademy.ir"
+        );
 
-      
-      url = url
-        .replace("https//", "https://")
-        .replace("http//", "http://")
-        .replace("http://https://", "https://")
-        .replace("https://http://", "http://");
+        url = url.replace(
+          "panel.makeenacademy.irhttp://panel.makeenacademy.ir",
+          "panel.makeenacademy.ir"
+        );
 
-      
-      url = url.replace("panel.makeenacademy.irhttps://panel.makeenacademy.ir", "panel.makeenacademy.ir");
-      url = url.replace("panel.makeenacademy.irhttp://panel.makeenacademy.ir", "panel.makeenacademy.ir");
+        url = url.replace("https://", "http://");
 
-      
-      url = url.replace("https://", "http://");
+        finalImage = url;
+      }
 
-      finalImage = url;
-      console.log("FINAL CLEAN URL:", finalImage);
+      setData({
+        name: guest.name,
+        phoneNumber: guest.phoneNumber,
+        field: guest.field,
+        status: guest.status,
+        bootcampNumber: guest.bootcampNumber,
+        ProgrammingLanguage: guest.ProgrammingLanguage,
+        image: finalImage,
+        isRetrieve: true
+      });
+
+      return;
+    }
+
+    const step1 = JSON.parse(localStorage.getItem("signup-step1"));
+    const step2 = JSON.parse(localStorage.getItem("signup-step2"));
+    const step3 = JSON.parse(localStorage.getItem("signup-step3"));
+
+    if (!step1 || !step2 || !step3) {
+      navigate("/");
+      return;
     }
 
     setData({
-      name: guest.name,
-      phoneNumber: guest.phoneNumber,
-      field: guest.field,
-      status: guest.status,
-      bootcampNumber: guest.bootcampNumber,
-      ProgrammingLanguage: guest.ProgrammingLanguage,
-      image: finalImage,
-      isRetrieve: true
+      name: step3.fullName,
+      phoneNumber: step3.phone,
+      field: step2.major,
+      status: step1.status,
+      bootcampNumber: step2.bootcamp,
+      ProgrammingLanguage: step2.language,
+      image: step3.image,
+      isRetrieve: false
     });
-
-    return;
-  }
-
-  
-  const step1 = JSON.parse(localStorage.getItem("signup-step1"));
-  const step2 = JSON.parse(localStorage.getItem("signup-step2"));
-  const step3 = JSON.parse(localStorage.getItem("signup-step3"));
-
-  if (!step1 || !step2 || !step3) {
-    navigate("/");
-    return;
-  }
-
-  setData({
-    name: step3.fullName,
-    phoneNumber: step3.phone,
-    field: step2.major,
-    status: step1.status,
-    bootcampNumber: step2.bootcamp,
-    ProgrammingLanguage: step2.language,
-    image: step3.image,
-    isRetrieve: false
-  });
-}, []);
-
-
-
-
+  }, []);
 
   const handleSubmit = async () => {
     if (!data) return;
@@ -102,26 +97,25 @@ useEffect(() => {
     formData.append("bootcampNumber", data.bootcampNumber);
     formData.append("ProgrammingLanguage", data.ProgrammingLanguage);
 
-    
     if (!data.isRetrieve && data.image) {
-      const blob = await fetch(data.image).then(r => r.blob());
+      const blob = await fetch(data.image).then((r) => r.blob());
       formData.append("image", blob, "photo.png");
     }
 
     try {
-      const res = await fetch("http://panel.makeenacademy.ir/api/guest/store", {
-        method: "POST",
-        body: formData
-      });
+      const res = await fetch(
+        "http://panel.makeenacademy.ir/api/guest/store",
+        {
+          method: "POST",
+          body: formData
+        }
+      );
 
       const result = await res.json();
 
       if (result.status === true) {
         setModalText("ثبت‌نام با موفقیت انجام شد");
         setOpenModal(true);
-
-        
-       
       } else {
         setModalText("خطایی رخ داد");
         setOpenModal(true);
@@ -135,10 +129,25 @@ useEffect(() => {
   if (!data) return null;
 
   return (
-    <Box sx={{ minHeight: "100vh", maxWidth: "500px", mx: "auto", display: "flex", flexDirection: "column" }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        maxWidth: "500px",
+        mx: "auto",
+        display: "flex",
+        flexDirection: "column"
+      }}
+    >
       <Navbar step="step4" />
 
-      <Typography sx={{ mt: 3, textAlign: "center", fontFamily: "regular", fontSize: "20px" }}>
+      <Typography
+        sx={{
+          mt: 3,
+          textAlign: "center",
+          fontFamily: "regular",
+          fontSize: "20px"
+        }}
+      >
         کارتت آماده شد 🎉
       </Typography>
 
@@ -172,7 +181,10 @@ useEffect(() => {
           }}
         >
           {data.image ? (
-            <img src={data.image} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+            <img
+              src={data.image}
+              style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            />
           ) : (
             <div style={{ width: "100%", height: "100%", background: "#eee" }} />
           )}
@@ -203,33 +215,57 @@ useEffect(() => {
             color: "white"
           }}
         >
-          {data.field === "programmer" ? "Developer" : data.field === "uiux" ? "UI/UX" : data.field}
-         
-
+          {data.field === "programmer"
+            ? "Developer"
+            : data.field === "uiux"
+            ? "UI/UX"
+            : data.field}
         </Typography>
       </Box>
 
-      {/* BUTTONS */}
-      <Box sx={{ mt: "auto", pb: 3, px: 2, display: "flex", flexDirection: "column", gap: 2 }}>
-       
-
+      {/* BOTTOM BUTTONS */}
+      <Box
+        sx={{
+          mt: "auto",
+          pb: 3,
+          px: 2,
+          display: "flex",
+          flexDirection: "column",
+          gap: 2
+        }}
+      >
         <Button variant="outlined" onClick={() => navigate("/")} sx={{ fontFamily: "medium" }}>
           خروج
         </Button>
       </Box>
 
+      {/* MODAL – EXACT SAME STYLE AS STEPS 1–3 */}
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Box sx={{ width: 300, p: 3, background: "white", borderRadius: 2, mx: "auto", mt: "20vh", textAlign: "center" }}>
-          <Typography sx={{ fontFamily: "regular", mb: 2 }}>{modalText}</Typography>
+        <Paper
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            p: 3,
+            width: "80%",
+            maxWidth: "400px",
+            textAlign: "center",
+            borderRadius: 2
+          }}
+        >
+          <Typography sx={{ fontFamily: "regular", mb: 2 }}>
+            {modalText}
+          </Typography>
 
           <Button
             variant="contained"
-            sx={{ width: "100%", backgroundColor: "#00509B", fontFamily: "regular" }}
             onClick={() => setOpenModal(false)}
+            sx={{ fontFamily: "medium", backgroundColor: "#01144f" }}
           >
-            باشه
+            متوجه شدم
           </Button>
-        </Box>
+        </Paper>
       </Modal>
     </Box>
   );
