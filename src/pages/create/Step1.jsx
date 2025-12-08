@@ -58,7 +58,7 @@ export default function Step1() {
   }
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", maxWidth: "550px", mx: "auto", flexDirection: "column" }}>
+    <Box sx={{ minHeight: "100vh", maxHeight:"100vh", display: "flex", maxWidth: "500px", mx: "auto", flexDirection: "column" }}>
       <Navbar step="step1" />
 
       <Box sx={{ flexGrow: 1, mt: 3, display: "flex", flexDirection: "column", alignItems: "center" }}>
@@ -157,7 +157,7 @@ export default function Step1() {
           <Button
             variant="contained"
             onClick={() => setOpenModal(false)}
-            sx={{ fontFamily: "medium", backgroundColor: "#01144f" }}
+            sx={{ fontFamily: "medium", backgroundColor: "#01144f", mt:"90%"  }}
           >
             متوجه شدم
           </Button>

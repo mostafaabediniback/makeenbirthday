@@ -71,7 +71,7 @@ const handleNext = () => {
     <Box
       sx={{
         height: "100vh",
-        maxWidth: "550px",
+        maxWidth: "500px",
         mx: "auto",
         display: "flex",
         flexDirection: "column",
@@ -186,7 +186,7 @@ const handleNext = () => {
         {/* دکمه ادامه */}
         <Box
           sx={{
-            mt: "auto",
+            mt:"12%",
             pb: 3,
             width: "100%",
             display: "flex",

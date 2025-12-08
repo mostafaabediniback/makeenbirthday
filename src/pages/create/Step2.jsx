@@ -51,7 +51,7 @@ export default function Step2() {
   };
 
   return (
-    <Box sx={{ minHeight: "100vh", display: "flex", maxWidth: "550px", mx: "auto", flexDirection: "column" }}>
+    <Box sx={{ minHeight: "100vh", display: "flex", maxWidth: "500px", mx: "auto", flexDirection: "column" }}>
       <Navbar step="step2" />
 
       <Box
@@ -210,7 +210,7 @@ export default function Step2() {
           </FormControl>
         )}
 
-        <Box sx={{ mt: "auto", pb: 3 }}>
+        <Box sx={{mt:"95%", pb: 3 }}>
           <Button
             variant="contained"
             disabled={!major || !bootcamp || (major === "programmer" && !language)}

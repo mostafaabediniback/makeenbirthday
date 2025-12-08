@@ -135,7 +135,7 @@ useEffect(() => {
   if (!data) return null;
 
   return (
-    <Box sx={{ minHeight: "100vh", maxWidth: "550px", mx: "auto", display: "flex", flexDirection: "column" }}>
+    <Box sx={{ minHeight: "100vh", maxWidth: "500px", mx: "auto", display: "flex", flexDirection: "column" }}>
       <Navbar step="step4" />
 
       <Typography sx={{ mt: 3, textAlign: "center", fontFamily: "regular", fontSize: "20px" }}>
@@ -219,7 +219,7 @@ useEffect(() => {
       </Box>
 
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Box sx={{ width: 300, p: 3, background: "white", borderRadius: 2, mx: "auto", mt: "30vh", textAlign: "center" }}>
+        <Box sx={{ width: 300, p: 3, background: "white", borderRadius: 2, mx: "auto", mt: "20vh", textAlign: "center" }}>
           <Typography sx={{ fontFamily: "regular", mb: 2 }}>{modalText}</Typography>
 
           <Button

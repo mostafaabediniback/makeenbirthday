@@ -36,7 +36,7 @@ export default function Home() {
         }
       `}</style>
 
-      <div className="min-h-screen max-h-screen w-full  flex flex-col bg-white pt-4 relative overflow-hidden items-center justify-center">
+      <div className="min-h-screen max-h-m   flex flex-col bg-white pt-4 relative overflow-hidden items-center justify-center">
 
         {/* container بادکنک و متن کنار هم */}
         <div className="relative flex flex-row-reverse items-center justify-center w-full h-[72vh] px-4">

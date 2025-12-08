@@ -6,9 +6,13 @@ import {
   Button,
   Modal,
   Typography,
-  TextField
+  TextField,
+  Backdrop,
+  Fade
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Paper from "@mui/material/Paper";
+
 
 export default function Retrieve() {
   const navigate = useNavigate();
@@ -125,36 +129,42 @@ export default function Retrieve() {
           </Button>
       </Box>
 
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
-        <Box
-          sx={{
-            width: 300,
-            p: 3,
-            backgroundColor: "white",
-            borderRadius: 2,
-            mx: "auto",
-            mt: "30vh",
-            textAlign: "center",
-          }}
-        >
-          <Typography sx={{ fontFamily: "regular", mb: 2 }}>
-            {modalText}
-          </Typography>
 
-          <Button
-            variant="contained"
-            sx={{
-              width: "100%",
-              fontFamily: "regular",
-              backgroundColor: "#00509B",
-              "&:hover": { backgroundColor: "#003f73" },
-            }}
-            onClick={() => setOpenModal(false)}
-          >
-            متوجه شدم
-          </Button>
-        </Box>
-      </Modal>
+
+<Modal open={openModal} onClose={() => setOpenModal(false)}>
+  <Paper
+    sx={{
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      p: 3,
+      width: "80%",
+      maxWidth: "400px",
+      textAlign: "center",
+      borderRadius: 2,
+    }}
+  >
+    <Typography sx={{ fontFamily: "regular", mb: 2 }}>
+      {modalText}
+    </Typography>
+
+    <Button
+      variant="contained"
+      onClick={() => setOpenModal(false)}
+      sx={{
+        width: "100%",
+        fontFamily: "medium",
+        backgroundColor: "#01144f",
+        "&:hover": { backgroundColor: "#001036" },
+      }}
+    >
+      متوجه شدم
+    </Button>
+  </Paper>
+</Modal>
+
+
     </Box>
   );
 }
