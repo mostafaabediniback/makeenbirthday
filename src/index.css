@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: medium;
+  src: url(../public/fonts/iranyekanwebmedium.woff);
+}
+@font-face {
+  font-family: bold;
+  src: url(../public/fonts/iranyekanwebbold.woff);
+}
+@font-face {
+  font-family: regular;
+  src: url(../public/fonts/iranyekanwebregular.woff);
+}
+
+
+@font-face {
+  font-family: kalamehregular;
+  src: url(../public/fonts/Kalameh-Regular.ttf);
+}
+
+@font-face {
+  font-family: kalamehmedium;
+  src: url(../public/fonts/Kalameh-Medium.ttf);
+}
+
