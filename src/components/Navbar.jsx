@@ -11,7 +11,7 @@ export default function Navbar({ step }) {
 
   const titles = {
     step1: "انتخاب وضعیت",
-    step2: "تکمیل مشخصات",
+    step2: "تکمیل مشخصات", 
     step3: "آپلود عکس",
     step4: "دریافت کارت",
     retrieve:"دریافت مجدد کارت"
