@@ -129,7 +129,7 @@ export default function Retrieve() {
         sx={{
           flexGrow: 1,
           mt: 4,
-          px: 3,
+          px: 1,
           display: "flex",
           flexDirection: "column",
           gap: 3,
@@ -141,12 +141,27 @@ export default function Retrieve() {
           value={phone}
           onChange={handlePhoneChange}
           disabled={loading}
+          inputMode="numeric"
           sx={{
             direction: "ltr",
             "& input": {
               fontFamily: "regular",
               textAlign: "right",
             },
+            "& .MuiOutlinedInput-root": {
+              transition: "all 0.3s ease"
+            },
+            "& .MuiOutlinedInput-root:hover": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#01144f"
+              }
+            },
+            "& .MuiOutlinedInput-root.Mui-focused": {
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "#01144f",
+                borderWidth: 2
+              }
+            }
           }}
         />
 
@@ -160,8 +175,17 @@ export default function Retrieve() {
             fontFamily: "medium",
             fontSize: "20px",
             backgroundColor: phone.length === 11 ? "#01144f" : "#c2c2c2",
+            transition: "all 0.3s ease",
             "&:disabled": {
               backgroundColor: "#c2c2c2"
+            },
+            "&:hover:not(:disabled)": {
+              backgroundColor: "#012a7a",
+              transform: "translateY(-2px)",
+              boxShadow: "0 4px 12px rgba(1, 20, 79, 0.3)"
+            },
+            "&:active:not(:disabled)": {
+              transform: "translateY(0)"
             }
           }}
           onClick={handleFindCard}
@@ -171,7 +195,16 @@ export default function Retrieve() {
         </Button>
       </Box>
 
-      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+      <Modal 
+        open={openModal} 
+        onClose={() => setOpenModal(false)}
+        sx={{
+          backdropFilter: "blur(4px)",
+          "& .MuiBackdrop-root": {
+            backgroundColor: "rgba(0, 0, 0, 0.5)"
+          }
+        }}
+      >
         <Paper
           sx={{
             position: "absolute",
@@ -182,7 +215,9 @@ export default function Retrieve() {
             width: "80%",
             maxWidth: "400px",
             textAlign: "center",
-            borderRadius: 2,
+            borderRadius: 3,
+            boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+            animation: "scaleIn 0.2s ease-out"
           }}
         >
           <Typography sx={{ fontFamily: "regular", mb: 2 }}>
@@ -196,6 +231,12 @@ export default function Retrieve() {
               width: "100%",
               fontFamily: "medium",
               backgroundColor: "#01144f",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                backgroundColor: "#012a7a",
+                transform: "translateY(-2px)",
+                boxShadow: "0 4px 12px rgba(1, 20, 79, 0.3)"
+              }
             }}
           >
             متوجه شدم

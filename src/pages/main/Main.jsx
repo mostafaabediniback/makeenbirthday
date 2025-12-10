@@ -25,11 +25,11 @@ export default function Home() {
           <img
             src="/images/baloon.svg"
             alt="balloon"
-            className="relative right-28 float-animation lg:right-[130px] lg:h-full"
+            className="relative right-28 float-animation lg:right-[130px] lg:h-full h-auto max-h-[400px]"
           />
 
           {/* متن */}
-          <div className="flex flex-col gap-14 text-right justify-center absolute pr-9 w-full lg:right-[530px]">
+          <div className="flex flex-col gap-8 md:gap-14 text-right justify-center absolute pr-4 md:pr-9 w-full lg:right-[530px]">
 
             <div>
               <p className="text-2xl font-[kalamehmedium] leading-tight lg:text-3xl">
@@ -65,21 +65,25 @@ export default function Home() {
         </div>
 
         {/* دکمه‌ها */}
-        <div className="flex flex-col max-w-[450px] w-full mx-auto space-y-4 lg:mt-auto mt-[] px-4 pb-6 z-10">
+        <div className="flex flex-col max-w-[450px] w-full mx-auto space-y-4 lg:mt-auto mt-auto px-4 pb-6 z-10">
 
           {/* دکمه ثبت‌نام → فقط navigate */}
           <button
             onClick={() => navigate("/create/step1")}
             className="bg-[#01144f] text-white text-xl font-[kalamehregular]
-             py-3 rounded-lg transition w-full "
+             py-3 rounded-lg transition-all duration-300 w-full 
+             hover:bg-[#012a7a] hover:shadow-lg hover:scale-[1.02]
+             active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#01144f] focus:ring-offset-2"
           >
             ثبت‌نام
           </button>
 
           <button
             onClick={() => navigate("/retrieve")}
-            className="hover:bg-gray-200 text-[#01144f] text-xl font-[kalamehregular]
-            py-3 rounded-lg outline-2 outline-[#01144f] transition w-full"
+            className="bg-white border-2 border-[#01144f] text-[#01144f] text-xl font-[kalamehregular]
+            py-3 rounded-lg transition-all duration-300 w-full
+            hover:bg-gray-50 hover:shadow-md hover:scale-[1.02]
+            active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-[#01144f] focus:ring-offset-2"
           >
             دریافت مجدد کارت
           </button>

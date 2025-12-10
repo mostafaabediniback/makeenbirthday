@@ -37,7 +37,18 @@ export default function Navbar({ step }) {
           onClick={() => navigate(-1)}
           aria-label="بازگشت"
           size="large"
-          sx={{ position: "absolute", right: 8, }}
+          sx={{ 
+            position: "absolute", 
+            right: 8,
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: "rgba(0, 0, 0, 0.08)",
+              transform: "translateX(-4px)"
+            },
+            "&:active": {
+              transform: "translateX(-2px)"
+            }
+          }}
         >
           <EastIcon />
         </IconButton>

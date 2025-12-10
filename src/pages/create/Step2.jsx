@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Button from "@mui/material/Button";
 import Select from "@mui/material/Select";
@@ -20,12 +21,14 @@ export default function Step2() {
     if (step1?.status) setStatus(step1.status);
   }, []);
 
+  const navigate = useNavigate();
+
   const handleGoNext = () => {
     localStorage.setItem(
       "signup-step2",
       JSON.stringify({ major, bootcamp, language })
     );
-    window.location.href = "/create/step3";
+    navigate("/create/step3");
   };
 
   const studentLangs = [
@@ -71,7 +74,7 @@ export default function Step2() {
           display: "flex",
           flexDirection: "column",
           gap: 3,
-          px: 2,
+          px: 1,
           overflow: "hidden"
         }}
       >
@@ -91,7 +94,26 @@ export default function Step2() {
             رشته تحصیلی
           </InputLabel>
 
-          <Select value={major} onChange={(e) => setMajor(e.target.value)} sx={{ ...rtlSelectStyle, fontFamily: "regular" }}>
+          <Select 
+            value={major} 
+            onChange={(e) => setMajor(e.target.value)} 
+            sx={{ 
+              ...rtlSelectStyle, 
+              fontFamily: "regular",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#01144f"
+                }
+              },
+              "&.Mui-focused": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#01144f",
+                  borderWidth: 2
+                }
+              }
+            }}
+          >
             <MenuItem value="programmer" sx={{ fontFamily: "regular" }}>
               برنامه نویس
             </MenuItem>
@@ -117,7 +139,26 @@ export default function Step2() {
             شماره بوتکمپ
           </span>
 
-          <Select value={bootcamp} onChange={(e) => setBootcamp(e.target.value)} sx={{ ...rtlSelectStyle, fontFamily: "regular" }}>
+          <Select 
+            value={bootcamp} 
+            onChange={(e) => setBootcamp(e.target.value)} 
+            sx={{ 
+              ...rtlSelectStyle, 
+              fontFamily: "regular",
+              transition: "all 0.3s ease",
+              "&:hover": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#01144f"
+                }
+              },
+              "&.Mui-focused": {
+                "& .MuiOutlinedInput-notchedOutline": {
+                  borderColor: "#01144f",
+                  borderWidth: 2
+                }
+              }
+            }}
+          >
             {(status === "student"
               ? [
                   { value: "20", label: "بیستم (20)" },
@@ -170,7 +211,22 @@ export default function Step2() {
             <Select
               value={language}
               onChange={(e) => setLanguage(e.target.value)}
-              sx={{ ...rtlSelectStyle, fontFamily: "regular" }}
+              sx={{ 
+                ...rtlSelectStyle, 
+                fontFamily: "regular",
+                transition: "all 0.3s ease",
+                "&:hover": {
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#01144f"
+                  }
+                },
+                "&.Mui-focused": {
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "#01144f",
+                    borderWidth: 2
+                  }
+                }
+              }}
               renderValue={(value) => {
                 const item = langs.find((l) => l.value === value);
                 return item ? (
@@ -197,7 +253,8 @@ export default function Step2() {
         sx={{
             mt: { xs: "auto", lg: "auto  " },
             pb: 3,
-            width: "100%"
+            width: "100%",
+            px: 1
         }}
       >
         <Button
@@ -210,6 +267,15 @@ export default function Step2() {
             fontSize: "20px",
             fontFamily: "medium",
             backgroundColor: major && bootcamp ? "#01144f" : "#c2c2c2",
+            transition: "all 0.3s ease",
+            "&:hover:not(:disabled)": {
+              backgroundColor: "#012a7a",
+              transform: "translateY(-2px)",
+              boxShadow: "0 4px 12px rgba(1, 20, 79, 0.3)"
+            },
+            "&:active:not(:disabled)": {
+              transform: "translateY(0)"
+            }
           }}
         >
           ادامه

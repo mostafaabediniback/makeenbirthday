@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
+}
+
+#root {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 @font-face {
   font-family: medium;
   src: url(../public/fonts/iranyekanwebmedium.woff);
@@ -26,11 +41,11 @@
 
 @keyframes scaleIn {
   from {
-    transform: scale(0.85);
+    transform: translate(-50%, -50%) scale(0.85);
     opacity: 0;
   }
   to {
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1);
     opacity: 1;
   }
 }
