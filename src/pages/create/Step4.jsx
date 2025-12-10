@@ -19,8 +19,51 @@ export default function Step4() {
   // -----------------------------
   // 📌 کلید اصلی: اسکرین‌شات کارت
   // -----------------------------
+  const loadFontAsDataURI = async (fontPath) => {
+    try {
+      const response = await fetch(fontPath);
+      const blob = await response.blob();
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      console.error(`Error loading font ${fontPath}:`, error);
+      return null;
+    }
+  };
+
   const waitForAssets = async () => {
+    // صبر کردن تا فونت‌ها لود شوند
     await document.fonts.ready;
+    
+    // اطمینان از لود شدن همه فونت‌های فارسی با تست واقعی
+    const testText = 'تست';
+    const fontsToLoad = [
+      { name: 'medium', test: `16px "medium"` },
+      { name: 'bold', test: `16px "bold"` },
+      { name: 'regular', test: `16px "regular"` },
+      { name: 'kalamehregular', test: `16px "kalamehregular"` },
+      { name: 'kalamehmedium', test: `16px "kalamehmedium"` }
+    ];
+    
+    // صبر تا همه فونت‌ها لود شوند
+    let allLoaded = false;
+    let attempts = 0;
+    while (!allLoaded && attempts < 50) {
+      allLoaded = fontsToLoad.every(font => {
+        return document.fonts.check(font.test, testText);
+      });
+      if (!allLoaded) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
+      }
+    }
+    
+    // صبر اضافی برای اطمینان از رندر شدن فونت‌ها
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
     if (imageReady) return;
     await new Promise((resolve) => {
       const start = Date.now();
@@ -37,22 +80,125 @@ export default function Step4() {
     if (!cardRef.current) return;
 
     try {
+      // روش جدید: استفاده از SVG برای رندر کردن متن فارسی
       await waitForAssets();
-      const canvas = await html2canvas(cardRef.current, {
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor: null,
-        scale: window.devicePixelRatio || 2,
+      
+      // ایجاد یک canvas جدید
+      const cardWidth = 330;
+      const cardHeight = 550;
+      const scale = 2;
+      const canvas = document.createElement('canvas');
+      canvas.width = cardWidth * scale;
+      canvas.height = cardHeight * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(scale, scale);
+      
+      // لود کردن تصویر پس‌زمینه کارت
+      const cardImage = new Image();
+      cardImage.crossOrigin = 'anonymous';
+      await new Promise((resolve, reject) => {
+        cardImage.onload = resolve;
+        cardImage.onerror = reject;
+        cardImage.src = '/images/card.jpg';
       });
-
+      
+      // رسم تصویر پس‌زمینه
+      ctx.drawImage(cardImage, 0, 0, cardWidth, cardHeight);
+      
+      // لود کردن تصویر کاربر
+      if (data.image) {
+        const userImage = new Image();
+        userImage.crossOrigin = 'anonymous';
+        await new Promise((resolve, reject) => {
+          userImage.onload = resolve;
+          userImage.onerror = () => {
+            console.warn('User image failed to load');
+            resolve(); // ادامه بدون تصویر کاربر
+          };
+          userImage.src = data.image;
+        });
+        
+        if (userImage.complete && userImage.naturalWidth > 0) {
+          // موقعیت عکس: در HTML از right: 74 استفاده شده
+          // در Canvas باید از چپ محاسبه شود: cardWidth - right - width = 330 - 74 - 80 = 176
+          const imageX = cardWidth - 74 - 80; // 176
+          const imageY = 226.5;
+          const imageSize = 80;
+          const radius = imageSize / 2; // 40
+          
+          // رسم تصویر کاربر به صورت دایره‌ای
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(imageX + radius, imageY + radius, radius, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.drawImage(userImage, imageX, imageY, imageSize, imageSize);
+          ctx.restore();
+        }
+      }
+      
+      // رسم متن با استفاده از Canvas API
+      // لود کردن فونت‌ها و اطمینان از لود شدن
+      const baseUrl = window.location.origin;
+      
+      // لود کردن فونت‌ها
+      const mediumFont = new FontFace('medium', `url(${baseUrl}/fonts/iranyekanwebmedium.woff)`);
+      const regularFont = new FontFace('regular', `url(${baseUrl}/fonts/iranyekanwebregular.woff)`);
+      
+      await Promise.all([
+        mediumFont.load().then(font => document.fonts.add(font)),
+        regularFont.load().then(font => document.fonts.add(font))
+      ]);
+      
+      // صبر برای اطمینان از لود شدن فونت‌ها
+      await document.fonts.ready;
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // رسم نام
+      // در HTML از right: 170 استفاده شده، در Canvas باید از چپ محاسبه شود
+      // با textAlign: 'right'، x موقعیت انتهای راست متن است
+      ctx.fillStyle = 'white';
+      ctx.font = '15px medium';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'top';
+      ctx.direction = 'rtl';
+      
+      // موقعیت از سمت راست: cardWidth - right = 330 - 170 = 160
+      const nameX = cardWidth - 170;
+      ctx.fillText(data.name, nameX, 230);
+      
+      // رسم رشته
+      const fieldText = data.field === "programmer"
+        ? "Developer"
+        : data.field === "uiux"
+        ? "UI/UX"
+        : data.field;
+      ctx.font = '16px regular';
+      ctx.fillText(fieldText, nameX, 260);
+      
+      // تبدیل به تصویر و دانلود
       const img = canvas.toDataURL("image/png");
-
       const link = document.createElement("a");
       link.href = img;
       link.download = "makeen-card.png";
       link.click();
     } catch (error) {
       console.error("Screenshot Error:", error);
+      // Fallback به روش قبلی
+      try {
+        const canvas = await html2canvas(cardRef.current, {
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          scale: window.devicePixelRatio || 2,
+        });
+        const img = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = img;
+        link.download = "makeen-card.png";
+        link.click();
+      } catch (fallbackError) {
+        console.error("Fallback Error:", fallbackError);
+      }
     }
   };
 
@@ -60,16 +206,85 @@ export default function Step4() {
     if (!cardRef.current) return;
 
     try {
+      // استفاده از همان روش Canvas برای PDF
       await waitForAssets();
-      const canvas = await html2canvas(cardRef.current, {
-        useCORS: true,
-        allowTaint: false,
-        backgroundColor: null,
-        scale: window.devicePixelRatio || 2,
+      
+      // ایجاد یک canvas جدید
+      const cardWidth = 330;
+      const cardHeight = 550;
+      const scale = 2;
+      const canvas = document.createElement('canvas');
+      canvas.width = cardWidth * scale;
+      canvas.height = cardHeight * scale;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(scale, scale);
+      
+      // لود کردن تصویر پس‌زمینه کارت
+      const cardImage = new Image();
+      cardImage.crossOrigin = 'anonymous';
+      await new Promise((resolve, reject) => {
+        cardImage.onload = resolve;
+        cardImage.onerror = reject;
+        cardImage.src = '/images/card.jpg';
       });
-
+      
+      // رسم تصویر پس‌زمینه
+      ctx.drawImage(cardImage, 0, 0, cardWidth, cardHeight);
+      
+      // لود کردن تصویر کاربر
+      if (data.image) {
+        const userImage = new Image();
+        userImage.crossOrigin = 'anonymous';
+        await new Promise((resolve, reject) => {
+          userImage.onload = resolve;
+          userImage.onerror = () => {
+            console.warn('User image failed to load');
+            resolve();
+          };
+          userImage.src = data.image;
+        });
+        
+        if (userImage.complete && userImage.naturalWidth > 0) {
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(74 + 40, 226.5 + 40, 40, 0, Math.PI * 2);
+          ctx.clip();
+          ctx.drawImage(userImage, 74, 226.5, 80, 80);
+          ctx.restore();
+        }
+      }
+      
+      // رسم متن
+      const baseUrl = window.location.origin;
+      
+      const mediumFont = new FontFace('medium', `url(${baseUrl}/fonts/iranyekanwebmedium.woff)`);
+      const regularFont = new FontFace('regular', `url(${baseUrl}/fonts/iranyekanwebregular.woff)`);
+      
+      await Promise.all([
+        mediumFont.load().then(font => document.fonts.add(font)),
+        regularFont.load().then(font => document.fonts.add(font))
+      ]);
+      
+      await document.fonts.ready;
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      ctx.fillStyle = 'white';
+      ctx.font = '15px medium';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'top';
+      ctx.direction = 'rtl';
+      ctx.fillText(data.name, 170, 230);
+      
+      const fieldText = data.field === "programmer"
+        ? "Developer"
+        : data.field === "uiux"
+        ? "UI/UX"
+        : data.field;
+      ctx.font = '16px regular';
+      ctx.fillText(fieldText, 170, 260);
+      
+      // تبدیل به PDF
       const imgData = canvas.toDataURL("image/png");
-
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "px",
@@ -80,6 +295,25 @@ export default function Step4() {
       pdf.save("makeen-card.pdf");
     } catch (error) {
       console.error("PDF Generate Error:", error);
+      // Fallback
+      try {
+        const canvas = await html2canvas(cardRef.current, {
+          useCORS: true,
+          allowTaint: false,
+          backgroundColor: null,
+          scale: window.devicePixelRatio || 2,
+        });
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF({
+          orientation: "portrait",
+          unit: "px",
+          format: [canvas.width, canvas.height],
+        });
+        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+        pdf.save("makeen-card.pdf");
+      } catch (fallbackError) {
+        console.error("Fallback Error:", fallbackError);
+      }
     }
   };
 
@@ -149,11 +383,12 @@ export default function Step4() {
   return (
     <Box
       sx={{
-        minHeight: "100vh",
+        height: "100vh",
         maxWidth: "500px",
         mx: "auto",
         display: "flex",
         flexDirection: "column",
+        overflow: "hidden",
       }}
     >
       <Navbar step="step4" />

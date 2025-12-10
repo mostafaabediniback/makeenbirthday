@@ -17,7 +17,7 @@ export default function Home() {
         }
       `}</style>
 
-      <div className="min-h-screen flex flex-col bg-white pt-4 relative overflow-hidden items-center justify-center">
+      <div className="h-screen flex flex-col bg-white pt-4 relative overflow-hidden items-center justify-center">
 
         {/* container بادکنک + متن */}
         <div className="relative flex flex-row-reverse items-center justify-center w-full h-[72vh] px-4">

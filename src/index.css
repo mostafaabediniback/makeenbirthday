@@ -6,37 +6,66 @@
 
 html, body {
   overflow-x: hidden;
+  overflow-y: hidden;
   width: 100%;
+  height: 100vh;
   position: relative;
+  margin: 0;
+  padding: 0;
 }
 
 #root {
   overflow-x: hidden;
+  overflow-y: hidden;
   width: 100%;
+  height: 100vh;
+  position: relative;
+}
+
+/* جلوگیری از اسکرول در موبایل */
+@media (max-width: 768px) {
+  html, body {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  #root {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
 }
 
 @font-face {
   font-family: medium;
   src: url(../public/fonts/iranyekanwebmedium.woff);
+  font-display: block;
 }
 @font-face {
   font-family: bold;
   src: url(../public/fonts/iranyekanwebbold.woff);
+  font-display: block;
 }
 @font-face {
   font-family: regular;
   src: url(../public/fonts/iranyekanwebregular.woff);
+  font-display: block;
 }
 
 
 @font-face {
   font-family: kalamehregular;
   src: url(../public/fonts/Kalameh-Regular.ttf);
+  font-display: block;
 }
 
 @font-face {
   font-family: kalamehmedium;
   src: url(../public/fonts/Kalameh-Medium.ttf);
+  font-display: block;
 }
 
 @keyframes scaleIn {
