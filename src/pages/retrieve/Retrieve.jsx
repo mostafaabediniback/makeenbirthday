@@ -7,18 +7,16 @@ import {
   Modal,
   Typography,
   TextField,
-  Backdrop,
-  Fade
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import Paper from "@mui/material/Paper";
-
 
 export default function Retrieve() {
   const navigate = useNavigate();
   const [phone, setPhone] = useState("");
   const [modalText, setModalText] = useState("");
   const [openModal, setOpenModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handlePhoneChange = (e) => {
     let value = e.target.value.replace(/\D/g, "");
@@ -33,48 +31,85 @@ export default function Retrieve() {
       return;
     }
 
+    setLoading(true);
+
     try {
-      const res = await fetch(
-        `http://panel.makeenacademy.ir/api/guest/show/${phone}`
-      );
+      // استفاده از API اصلی با proxy
+      const res = await fetch(`/api/guest/show/${phone}`, {
+        method: "GET",
+        headers: {
+          'Accept': 'application/json',
+        }
+      });
+
+      console.log("Response status:", res.status);
+
+      if (!res.ok) {
+        throw new Error(`Server error: ${res.status}`);
+      }
 
       const data = await res.json();
+      console.log("FULL API RESPONSE:", data);
 
-      console.log("DATA FROM API:", data); 
-
-      if (data.status === true) {
+      if (data.status === true && data.Guest) {
         const guest = data.Guest;
-
-
+        
+        console.log("Guest data from API:", guest);
+        
         let finalImage = null;
 
-        if (guest.image) {
-          
-          if (!guest.image.startsWith("http")) {
-            finalImage = `http://panel.makeenacademy.ir/storage/guests/${guest.image}`;
-          } else {
+        // اول media رو چک کن
+        if (guest.media && guest.media.length > 0) {
+          finalImage = guest.media[0].original_url;
+          console.log("Image from media:", finalImage);
+        } 
+        // بعد image رو چک کن
+        else if (guest.image) {
+          if (guest.image.startsWith("http")) {
             finalImage = guest.image;
+          } else {
+            finalImage = `https://panel.makeenacademy.ir/storage/guests/${guest.image}`;
           }
+          console.log("Image from image field:", finalImage);
         }
 
-        
+        // ذخیره تمام داده‌ها
         localStorage.setItem(
           "retrieve-data",
           JSON.stringify({
-            ...guest,
-            image: finalImage, 
+            name: guest.name,
+            phoneNumber: guest.phoneNumber,
+            field: guest.field,
+            status: guest.status,
+            bootcampNumber: guest.bootcampNumber,
+            ProgrammingLanguage: guest.ProgrammingLanguage,
+            image: finalImage,
+           
+            // برای دیباگ - همه فیلدها رو ذخیره کن
+            _allData: guest
           })
         );
 
+        console.log("Saved to localStorage:", {
+          name: guest.name,
+          field: guest.field,
+          phoneNumber: guest.phoneNumber,
+          image: finalImage
+        });
+
         navigate("/create/step4");
       } else {
+        console.log("No guest found or API returned false");
         setModalText("شماره‌ای با این مشخصات یافت نشد");
         setOpenModal(true);
       }
+
     } catch (err) {
-      console.log("ERROR:", err);
+      console.error("ERROR in retrieve:", err);
       setModalText("مشکلی پیش آمده، دوباره تلاش کنید");
       setOpenModal(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -105,6 +140,7 @@ export default function Retrieve() {
           placeholder="09123456789"
           value={phone}
           onChange={handlePhoneChange}
+          disabled={loading}
           sx={{
             direction: "ltr",
             "& input": {
@@ -114,57 +150,58 @@ export default function Retrieve() {
           }}
         />
 
-      <Button
-            variant="contained"
-             sx={{
-              mx: "auto", display: "block", width: "100%",
-              height: "55px",
-              fontFamily: "medium",
-              fontSize:"20px"    ,
-              backgroundColor: phone.length == 11 ? "#01144f" : "#c2c2c2",
-            }}
-            onClick={handleFindCard}
-          >
-            دریافت کارت
-          </Button>
+        <Button
+          variant="contained"
+          sx={{
+            mx: "auto",
+            display: "block",
+            width: "100%",
+            height: "55px",
+            fontFamily: "medium",
+            fontSize: "20px",
+            backgroundColor: phone.length === 11 ? "#01144f" : "#c2c2c2",
+            "&:disabled": {
+              backgroundColor: "#c2c2c2"
+            }
+          }}
+          onClick={handleFindCard}
+          disabled={loading || phone.length !== 11}
+        >
+          {loading ? "در حال جستجو..." : "دریافت کارت"}
+        </Button>
       </Box>
 
+      <Modal open={openModal} onClose={() => setOpenModal(false)}>
+        <Paper
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            p: 3,
+            width: "80%",
+            maxWidth: "400px",
+            textAlign: "center",
+            borderRadius: 2,
+          }}
+        >
+          <Typography sx={{ fontFamily: "regular", mb: 2 }}>
+            {modalText}
+          </Typography>
 
-
-<Modal open={openModal} onClose={() => setOpenModal(false)}>
-  <Paper
-    sx={{
-      position: "absolute",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      p: 3,
-      width: "80%",
-      maxWidth: "400px",
-      textAlign: "center",
-      borderRadius: 2,
-    }}
-  >
-    <Typography sx={{ fontFamily: "regular", mb: 2 }}>
-      {modalText}
-    </Typography>
-
-    <Button
-      variant="contained"
-      onClick={() => setOpenModal(false)}
-      sx={{
-        width: "100%",
-        fontFamily: "medium",
-        backgroundColor: "#01144f",
-        "&:hover": { backgroundColor: "#001036" },
-      }}
-    >
-      متوجه شدم
-    </Button>
-  </Paper>
-</Modal>
-
-
+          <Button
+            variant="contained"
+            onClick={() => setOpenModal(false)}
+            sx={{
+              width: "100%",
+              fontFamily: "medium",
+              backgroundColor: "#01144f",
+            }}
+          >
+            متوجه شدم
+          </Button>
+        </Paper>
+      </Modal>
     </Box>
   );
 }

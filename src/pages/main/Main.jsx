@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export default function Home() {
   const navigate = useNavigate();
-  const [openModal, setOpenModal] = useState(false);
+ 
 
   return (
     <>
@@ -29,7 +29,7 @@ export default function Home() {
           />
 
           {/* متن */}
-          <div className="flex flex-col gap-14 text-right justify-center absolute pr-9 w-full lg:right-[550px]">
+          <div className="flex flex-col gap-14 text-right justify-center absolute pr-9 w-full lg:right-[530px]">
 
             <div>
               <p className="text-2xl font-[kalamehmedium] leading-tight lg:text-3xl">
@@ -65,13 +65,13 @@ export default function Home() {
         </div>
 
         {/* دکمه‌ها */}
-        <div className="flex flex-col max-w-[450px] w-full mx-auto space-y-4 mt-auto px-4 pb-6 z-10">
+        <div className="flex flex-col max-w-[450px] w-full mx-auto space-y-4 lg:mt-auto mt-[] px-4 pb-6 z-10">
 
           {/* دکمه ثبت‌نام → فقط navigate */}
           <button
             onClick={() => navigate("/create/step1")}
             className="bg-[#01144f] text-white text-xl font-[kalamehregular]
-             py-3 rounded-lg transition w-full"
+             py-3 rounded-lg transition w-full "
           >
             ثبت‌نام
           </button>

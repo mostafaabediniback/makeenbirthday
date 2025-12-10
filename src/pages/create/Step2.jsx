@@ -67,7 +67,7 @@ export default function Step2() {
       <Box
         sx={{
           flexGrow: 1,
-          mt: 2,
+          mt: 3,
           display: "flex",
           flexDirection: "column",
           gap: 3,
@@ -195,8 +195,9 @@ export default function Step2() {
       {/* دکمه ثابت پایین */}
       <Box
         sx={{
-          p: 2,
-          width: "100%"
+            mt: { xs: "auto", lg: "auto  " },
+            pb: 3,
+            width: "100%"
         }}
       >
         <Button

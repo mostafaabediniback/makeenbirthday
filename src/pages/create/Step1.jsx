@@ -10,7 +10,6 @@ import Navbar from "../../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
 import SchoolIcon from "@mui/icons-material/School";
-
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
@@ -23,20 +22,30 @@ export default function Step1() {
   const [capacityMessage, setCapacityMessage] = useState("");
 
   const goNext = async () => {
+    if (!status) return;
+
     const url =
       status === "graduate"
-        ? "http://panel.makeenacademy.ir/api/capacity/check/graduate"
-        : "http://panel.makeenacademy.ir/api/capacity/check/student";
+        ? "/api/capacity/check/graduate"
+        : "/api/capacity/check/student";
 
     try {
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        method: "GET",
+      });
+
+      if (!res.ok) {
+        throw new Error("SERVER_ERROR");
+      }
+
       const data = await res.json();
+
+      console.log("CAPACITY RESPONSE => ", data);
 
       if (data.status === "full") {
         setCapacityMessage(
-          `ظرفیت ${
-            status === "student" ? "دانشجو" : "فارغ‌التحصیل"
-          } ها تکمیل شده است. لطفا با آکادمی مکین تماس بگیرید.`
+          `ظرفیت ${status === "student" ? "دانشجو" : "فارغ‌التحصیل"
+          } ها تکمیل شده است.`
         );
         setOpenModal(true);
         return;
@@ -44,7 +53,8 @@ export default function Step1() {
 
       localStorage.setItem("signup-step1", JSON.stringify({ status }));
       navigate("/create/step2");
-    } catch (err) {
+    } catch (error) {
+      console.error("CAPACITY CHECK ERROR:", error);
       setCapacityMessage("خطایی رخ داد. لطفا دوباره تلاش کنید.");
       setOpenModal(true);
     }
@@ -76,7 +86,7 @@ export default function Step1() {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        maxWidth: "600px",
+        maxWidth: "500px",
         mx: "auto"
       }}
     >
@@ -101,15 +111,12 @@ export default function Step1() {
             flexDirection: "column",
             gap: 2,
             width: "100%",
-            mr:"5%"
-                      
+            mr: "5%"
           }}
         >
           <FormControlLabel
             value="graduate"
-            label={
-              <LabelWithIcons label="فارغ التحصیل" isStudent={false} />
-            }
+            label={<LabelWithIcons label="فارغ‌التحصیل" isStudent={false} />}
             labelPlacement="start"
             control={
               <Radio
@@ -123,8 +130,7 @@ export default function Step1() {
             }
             sx={{
               border: 1,
-              borderColor:
-                status === "graduate" ? "#01144f" : "grey.400",
+              borderColor: status === "graduate" ? "#01144f" : "grey.400",
               borderRadius: 2,
               px: 2,
               py: 1.5,
@@ -149,8 +155,7 @@ export default function Step1() {
             }
             sx={{
               border: 1,
-              borderColor:
-                status === "student" ? "#01144f" : "grey.400",
+              borderColor: status === "student" ? "#01144f" : "grey.400",
               borderRadius: 2,
               px: 2,
               py: 1.5,
@@ -162,7 +167,7 @@ export default function Step1() {
 
         <Box
           sx={{
-            mt: "auto",
+            mt: { xs: "600px", lg: "auto  " },
             pb: 3,
             width: "100%",
             display: "flex",
@@ -186,7 +191,6 @@ export default function Step1() {
         </Box>
       </Box>
 
-      {/* ------- Modal ------- */}
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Paper
           sx={{

@@ -1,130 +1,297 @@
+// "use client";
+
+// import { useEffect, useState, useRef } from "react";
+// import Navbar from "../../components/Navbar";
+// import { Box, Button, Typography, Modal, Paper } from "@mui/material";
+// import { useNavigate } from "react-router-dom";
+
+// export default function Step4() {
+//   const navigate = useNavigate();
+//   const cardRef = useRef(null);
+//   const [data, setData] = useState(null);
+//   const [openModal, setOpenModal] = useState(false);
+//   const [modalText, setModalText] = useState("");
+  
+//  useEffect(() => {
+//   const phone = localStorage.getItem("signup-phone");
+
+//   if (!phone) {
+//     navigate("/");
+//     return;
+//   }
+
+//   fetch(`https://panel.makeenacademy.ir/api/guest/show/${phone}`)
+//     .then((res) => res.json())
+//     .then((data) => {
+//       if (!data || !data.Guest) {
+//         setModalText("اطلاعاتی از سرور یافت نشد");
+//         setOpenModal(true);
+//         return;
+//       }
+
+//       const guest = data.Guest;
+
+//       // تعیین عکس
+//       let finalImage = null;
+//       if (guest.media?.length) {
+//         finalImage = guest.media[0].original_url;
+//       } else if (guest.image) {
+//         finalImage = `https://panel.makeenacademy.ir/storage/guests/${guest.image}`;
+//       }
+
+//       setData({
+//         name: guest.name,
+//         phoneNumber: guest.phoneNumber,
+//         field: guest.field,
+//         status: guest.status,
+//         bootcampNumber: guest.bootcampNumber,
+//         ProgrammingLanguage: guest.ProgrammingLanguage,
+//         image: finalImage,
+//       });
+//     })
+//     .catch(() => {
+//       setModalText("مشکل در ارتباط با سرور");
+//       setOpenModal(true);
+//     });
+// }, []);
+
+
+//   if (!data) return null;
+
+//   return (
+//     <Box
+//       sx={{
+//         minHeight: "100vh",
+//         maxWidth: "500px",
+//         mx: "auto",
+//         display: "flex",
+//         flexDirection: "column",
+//       }}
+//     >
+//       <Navbar step="step4" />
+
+//       <Typography
+//         sx={{
+//           mt: 3,
+//           textAlign: "center",
+//           fontFamily: "regular",
+//           fontSize: "20px",
+//         }}
+//       >
+//         کارتت آماده شد 🎉
+//       </Typography>
+
+//       {/* CARD */}
+//       <Box
+//         ref={cardRef}
+//         sx={{
+//           width: 330,
+//           height: 550,
+//           mt: 2,
+//           mx: "auto",
+//           position: "relative",
+//           backgroundImage: 'url("/images/card.jpg")',
+//           backgroundSize: "cover",
+//           backgroundPosition: "center",
+//           borderRadius: "5px",
+//           overflow: "hidden",
+//         }}
+//       >
+//         {/* PHOTO */}
+//         <Box
+//           sx={{
+//             position: "absolute",
+//             top: 226.5,
+//             left: "65.30%",
+//             transform: "translateX(-50%)",
+//             width: 80,
+//             height: 80,
+//             borderRadius: "50%",
+//             overflow: "hidden",
+//           }}
+//         >
+//           {data.image ? (
+//             <img
+//               src={data.image}
+//               style={{ width: "100%", height: "100%", objectFit: "cover" }}
+//             />
+//           ) : (
+//             <div style={{ width: "100%", height: "100%", background: "#eee" }} />
+//           )}
+//         </Box>
+
+//         {/* NAME */}
+//         <Typography
+//           sx={{
+//             position: "absolute",
+//             top: 230,
+//             right: 170,
+//             fontFamily: "medium",
+//             fontSize: "15px",
+//             color: "white",
+//           }}
+//         >
+//           {data.name}
+//         </Typography>
+
+//         {/* FIELD */}
+//         <Typography
+//           sx={{
+//             position: "absolute",
+//             top: 260,
+//             right: 170,
+//             fontFamily: "regular",
+//             fontSize: "16px",
+//             color: "white",
+//           }}
+//         >
+//           {data.field === "programmer"
+//             ? "Developer"
+//             : data.field === "uiux"
+//             ? "UI/UX"
+//             : data.field}
+//         </Typography>
+//       </Box>
+
+//       {/* BOTTOM BUTTONS */}
+//       <Box
+//         sx={{
+//           mt: "auto",
+//           pb: 3,
+//           px: 2,
+//           display: "flex",
+//           flexDirection: "column",
+//           gap: 2,
+//         }}
+//       >
+//         <Button
+//           variant="outlined"
+//           onClick={() => navigate("/")}
+//           sx={{ fontFamily: "medium" }}
+//         >
+//           خروج
+//         </Button>
+//       </Box>
+
+//       {/* MODAL */}
+//       <Modal open={openModal} onClose={() => setOpenModal(false)}>
+//         <Paper
+//           sx={{
+//             position: "absolute",
+//             top: "50%",
+//             left: "50%",
+//             transform: "translate(-50%, -50%)",
+//             p: 3,
+//             width: "80%",
+//             maxWidth: "400px",
+//             textAlign: "center",
+//             borderRadius: 2,
+//           }}
+//         >
+//           <Typography sx={{ fontFamily: "regular", mb: 2 }}>
+//             {modalText}
+//           </Typography> 
+//           <Button
+//             variant="contained"
+//             onClick={() => setOpenModal(false)}
+//             sx={{ fontFamily: "medium", backgroundColor: "#01144f" }}
+//           >
+//             متوجه شدم
+//           </Button>
+//         </Paper>
+//       </Modal>
+//     </Box>
+//   );
+// }
+
+
+
+
 "use client";
+
 import { useEffect, useState, useRef } from "react";
 import Navbar from "../../components/Navbar";
-
-import {
-  Box,
-  Button,
-  Typography,
-  Modal,
-  Paper
-} from "@mui/material";
+import { Box, Button, Typography, Modal, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import html2canvas from "html2canvas";
 
 export default function Step4() {
   const navigate = useNavigate();
   const cardRef = useRef(null);
-
   const [data, setData] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [modalText, setModalText] = useState("");
 
-  useEffect(() => {
-    const retrieveRaw = localStorage.getItem("retrieve-data");
+  // -----------------------------
+  // 📌 کلید اصلی: اسکرین‌شات کارت
+  // -----------------------------
+  const handleDownload = async () => {
+    if (!cardRef.current) return;
 
-    if (retrieveRaw) {
-      const guest = JSON.parse(retrieveRaw);
-
-      let finalImage = null;
-
-      if (guest.media?.length) {
-        let url = guest.media[0].original_url;
-
-        url = url
-          .replace("https//", "https://")
-          .replace("http//", "http://")
-          .replace("http://https://", "https://")
-          .replace("https://http://", "http://");
-
-        url = url.replace(
-          "panel.makeenacademy.irhttps://panel.makeenacademy.ir",
-          "panel.makeenacademy.ir"
-        );
-
-        url = url.replace(
-          "panel.makeenacademy.irhttp://panel.makeenacademy.ir",
-          "panel.makeenacademy.ir"
-        );
-
-        url = url.replace("https://", "http://");
-
-        finalImage = url;
-      }
-
-      setData({
-        name: guest.name,
-        phoneNumber: guest.phoneNumber,
-        field: guest.field,
-        status: guest.status,
-        bootcampNumber: guest.bootcampNumber,
-        ProgrammingLanguage: guest.ProgrammingLanguage,
-        image: finalImage,
-        isRetrieve: true
+    try {
+      const canvas = await html2canvas(cardRef.current, {
+        useCORS: true,
+        allowTaint: false,
+        backgroundColor: null,
+        scale: 2,
       });
 
-      return;
+      const img = canvas.toDataURL("image/png");
+
+      const link = document.createElement("a");
+      link.href = img;
+      link.download = "makeen-card.png";
+      link.click();
+    } catch (error) {
+      console.error("Screenshot Error:", error);
     }
+  };
 
-    const step1 = JSON.parse(localStorage.getItem("signup-step1"));
-    const step2 = JSON.parse(localStorage.getItem("signup-step2"));
-    const step3 = JSON.parse(localStorage.getItem("signup-step3"));
+  // -----------------------------
+  // 📌 گرفتن اطلاعات سرور
+  // -----------------------------
+  useEffect(() => {
+    const phone = localStorage.getItem("signup-phone");
 
-    if (!step1 || !step2 || !step3) {
+    if (!phone) {
       navigate("/");
       return;
     }
 
-    setData({
-      name: step3.fullName,
-      phoneNumber: step3.phone,
-      field: step2.major,
-      status: step1.status,
-      bootcampNumber: step2.bootcamp,
-      ProgrammingLanguage: step2.language,
-      image: step3.image,
-      isRetrieve: false
-    });
-  }, []);
-
-  const handleSubmit = async () => {
-    if (!data) return;
-
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("status", data.status);
-    formData.append("phoneNumber", data.phoneNumber);
-    formData.append("field", data.field);
-    formData.append("bootcampNumber", data.bootcampNumber);
-    formData.append("ProgrammingLanguage", data.ProgrammingLanguage);
-
-    if (!data.isRetrieve && data.image) {
-      const blob = await fetch(data.image).then((r) => r.blob());
-      formData.append("image", blob, "photo.png");
-    }
-
-    try {
-      const res = await fetch(
-        "http://panel.makeenacademy.ir/api/guest/store",
-        {
-          method: "POST",
-          body: formData
+    fetch(`https://panel.makeenacademy.ir/api/guest/show/${phone}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (!data || !data.Guest) {
+          setModalText("اطلاعاتی از سرور یافت نشد");
+          setOpenModal(true);
+          return;
         }
-      );
 
-      const result = await res.json();
+        const guest = data.Guest;
 
-      if (result.status === true) {
-        setModalText("ثبت‌نام با موفقیت انجام شد");
+        let finalImage = null;
+        if (guest.media?.length) {
+          finalImage = guest.media[0].original_url;
+        } else if (guest.image) {
+          finalImage =
+            "https://panel.makeenacademy.ir/storage/guests/" + guest.image;
+        }
+
+        setData({
+          name: guest.name,
+          phoneNumber: guest.phoneNumber,
+          field: guest.field,
+          status: guest.status,
+          bootcampNumber: guest.bootcampNumber,
+          ProgrammingLanguage: guest.ProgrammingLanguage,
+          image: finalImage,
+        });
+      })
+      .catch(() => {
+        setModalText("مشکل در ارتباط با سرور");
         setOpenModal(true);
-      } else {
-        setModalText("خطایی رخ داد");
-        setOpenModal(true);
-      }
-    } catch (error) {
-      setModalText("مشکل در ارتباط با سرور");
-      setOpenModal(true);
-    }
-  };
+      });
+  }, []);
 
   if (!data) return null;
 
@@ -135,17 +302,17 @@ export default function Step4() {
         maxWidth: "500px",
         mx: "auto",
         display: "flex",
-        flexDirection: "column"
+        flexDirection: "column",
       }}
     >
       <Navbar step="step4" />
 
       <Typography
         sx={{
-          mt: 3,
+         
           textAlign: "center",
           fontFamily: "regular",
-          fontSize: "20px"
+          fontSize: "20px",
         }}
       >
         کارتت آماده شد 🎉
@@ -164,7 +331,7 @@ export default function Step4() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           borderRadius: "5px",
-          overflow: "hidden"
+          overflow: "hidden",
         }}
       >
         {/* PHOTO */}
@@ -177,12 +344,13 @@ export default function Step4() {
             width: 80,
             height: 80,
             borderRadius: "50%",
-            overflow: "hidden"
+            overflow: "hidden",
           }}
         >
           {data.image ? (
             <img
               src={data.image}
+              crossOrigin="anonymous"
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           ) : (
@@ -198,7 +366,7 @@ export default function Step4() {
             right: 170,
             fontFamily: "medium",
             fontSize: "15px",
-            color: "white"
+            color: "white",
           }}
         >
           {data.name}
@@ -212,7 +380,7 @@ export default function Step4() {
             right: 170,
             fontFamily: "regular",
             fontSize: "16px",
-            color: "white"
+            color: "white",
           }}
         >
           {data.field === "programmer"
@@ -223,7 +391,7 @@ export default function Step4() {
         </Typography>
       </Box>
 
-      {/* BOTTOM BUTTONS */}
+      {/* BUTTONS */}
       <Box
         sx={{
           mt: "auto",
@@ -231,15 +399,27 @@ export default function Step4() {
           px: 2,
           display: "flex",
           flexDirection: "column",
-          gap: 2
+          gap: 2,
         }}
       >
-        <Button variant="outlined" onClick={() => navigate("/")} sx={{ fontFamily: "medium" }}>
+        <Button
+          variant="contained"
+          sx={{ fontFamily: "medium", backgroundColor: "#01144f" }}
+          onClick={handleDownload}
+        >
+          دانلود کارت
+        </Button>
+
+        <Button
+          variant="outlined"
+          onClick={() => navigate("/")}
+          sx={{ fontFamily: "medium" }}
+        >
           خروج
         </Button>
       </Box>
 
-      {/* MODAL – EXACT SAME STYLE AS STEPS 1–3 */}
+      {/* MODAL */}
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
         <Paper
           sx={{
@@ -251,13 +431,12 @@ export default function Step4() {
             width: "80%",
             maxWidth: "400px",
             textAlign: "center",
-            borderRadius: 2
+            borderRadius: 2,
           }}
         >
           <Typography sx={{ fontFamily: "regular", mb: 2 }}>
             {modalText}
           </Typography>
-
           <Button
             variant="contained"
             onClick={() => setOpenModal(false)}
